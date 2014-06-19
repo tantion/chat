@@ -5,11 +5,23 @@ var fs = require('fs');
 app.listen(3030);
 
 function handler (req, res) {
-  fs.readFile(__dirname + '/app/index.html',
-  function (err, data) {
+  var url = req.url;
+  var file = __dirname;
+
+  if (url === '/' || url === '/index.html') {
+    file += '/app/index.html';
+  }
+  else if (url === '/socket.io.js') {
+    file += '/app/socket.io.js';
+  }
+  else {
+    file += '/app/favicon.ico';
+  }
+
+  fs.readFile(file, function (err, data) {
     if (err) {
       res.writeHead(500);
-      return res.end('Error loading index.html');
+      return res.end('Error loading ' + url);
     }
 
     res.writeHead(200);
